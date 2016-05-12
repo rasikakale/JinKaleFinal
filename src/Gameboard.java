@@ -5,6 +5,7 @@ public class Gameboard {
 	final static int BOMB = 4;
 	static int row;
 	static int column;
+	static boolean[][] med;
 
 	// interface location? inheritance?
 
@@ -30,6 +31,7 @@ public class Gameboard {
 		return c;
 	}
 
+	
 	public static boolean HasBomb() {
 		
 		for (int r = 0; r < row; r++) {
@@ -42,7 +44,7 @@ public class Gameboard {
 		
 		
 		return false; 
-		
+	}
 		
 		
 		
@@ -50,7 +52,7 @@ public class Gameboard {
 		// checks whether there is bomb or not in a location on gamboard
 		// should check adjacent location from edge to see whether there is bomb
 		// or not
-	}
+	
 
 	public int getRow() {
 		return row;
@@ -60,11 +62,17 @@ public class Gameboard {
 		return column;
 	}
 	
-	public void ShowEmptySquares(int r, int c) {
-		if (r < 0 || r > 10 || c < 0 || c > 10) {
+	public void ShowEmptySquares(int r, int c) { // shows all empty squares without numbers when clicking a box
+		if (r < 0 || r > row || c < 0 || c > column) {
 			return;
 		}
 		
+		ShowEmptySquares(r - 1, c - 1);
+		ShowEmptySquares(r - 1, c);
+		ShowEmptySquares(r - 1, c + 1);
+		ShowEmptySquares(r - 1, c);
+		
+		ShowEmptySquares
 		
 	}
 	
