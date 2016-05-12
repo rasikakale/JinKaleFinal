@@ -1,10 +1,10 @@
 
 public class Gameboard {
 
-	int[][] board;
+	static int[][] board;
 	final static int BOMB = 4;
-	int row;
-	int column;
+	static int row;
+	static int column;
 
 	// interface location? inheritance?
 
@@ -31,7 +31,22 @@ public class Gameboard {
 	}
 
 	public static boolean HasBomb() {
-		return false; // -1 is has bomb, 1 is no bomb, 0 is space not opened
+		
+		for (int r = 0; r < row; r++) {
+			for(int c = 0; c < column; c++) {
+				if (board[r + 1][c] || board[r][c] == board[] ]) {
+					
+				}
+			}
+		}
+		
+		
+		return false; 
+		
+		
+		
+		
+		// -1 is has bomb, 1 is no bomb, 0 is space not opened
 		// checks whether there is bomb or not in a location on gamboard
 		// should check adjacent location from edge to see whether there is bomb
 		// or not
@@ -44,5 +59,22 @@ public class Gameboard {
 	public int getCol() {
 		return column;
 	}
+	
+	public void ShowEmptySquares(int r, int c) {
+		if (r < 0 || r > 10 || c < 0 || c > 10) {
+			return;
+		}
+		
+		
+	}
+	
+	public void setFlags() { //shows flags when user right-clicks on square
+		
+	}
+	
+	public void setRandomMines() {
+		
+	}
+	
 
 }
