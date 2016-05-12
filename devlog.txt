@@ -3,4 +3,14 @@ Development Log
 Day 1: 5/12/16
 	- Added a dev log :D 
 	- figured out what methods to use for the game board for minesweeper
+	- Added:
+		 - boolean array
+		 - fixed constructor
+		 - added a recursion method
+		 - getters and setters
+	- what we plan to do:
+		 - Add a display class (PApplet)
+		 - convert from pixels to rows/columns
+		 - figure out what methods are needed to draw the grid (rect and image)
+		  
 	
