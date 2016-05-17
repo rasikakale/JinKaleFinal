@@ -13,4 +13,12 @@ Day 1: 5/12/16
 		 - convert from pixels to rows/columns
 		 - figure out what methods are needed to draw the grid (rect and image)
 		  
-	
+Day 2: 5/16/16
+	- Added:
+		- set/is Flag method
+		- set/is bomb method
+		- reset game method
+		- started Papplet class
+	- what we plan to do:
+		- complete the PApplet class as much as possible
+		- add more boolean methods to GameBoard class for a working code
