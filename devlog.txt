@@ -23,3 +23,14 @@ Day 2: 5/16/16
 		- complete the PApplet class as much as possible
 		- add more boolean methods to GameBoard class for a working code
 		- Add the recursive method for minesweeper
+
+Day 3: 5/17/16
+	-Added:
+	 	- recursive method
+	 	- rectangles for PApplet
+	 	- updated PApplet
+	 	- partner cloned code through github
+	 - what we plan to do:
+	 	- organize our minesweeper code
+	 	- add an interface (if necessary)
+	 	- make sure that PApplet runs
