@@ -22,3 +22,4 @@ Day 2: 5/16/16
 	- what we plan to do:
 		- complete the PApplet class as much as possible
 		- add more boolean methods to GameBoard class for a working code
+		- Add the recursive method for minesweeper
