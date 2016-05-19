@@ -3,12 +3,13 @@ public class Gameboard {
 
 	private int[][] board;
 	final static int BOMB = 4;
-	private int row;
-	private int column;
+	private int row = 10;
+	private int column = 10;
 	private boolean[][] med; // checks to see whether numbers will show or not
 								// on grid
 	private boolean[][] flags;
 	private boolean[][] bombs;
+
 	private int startTime;
 	private int endTime;
 
@@ -48,23 +49,6 @@ public class Gameboard {
 		return flags[r][c];
 	}
 
-	/*
-	 * public static boolean HasBomb() {
-	 * 
-	 * for (int r = 0; r < row; r++) { for(int c = 0; c < column; c++) { if
-	 * (board[r + 1][c] || board[r][c] == board[] ]) {
-	 * 
-	 * } } }
-	 * 
-	 * 
-	 * return false; }
-	 */
-
-	// -1 is has bomb, 1 is no bomb, 0 is space not opened
-	// checks whether there is bomb or not in a location on gamboard
-	// should check adjacent location from edge to see whether there is bomb
-	// or not
-
 	public int getRow() {
 		return row;
 	}
@@ -102,7 +86,21 @@ public class Gameboard {
 		}
 
 	}
-	
-	
+
+	public int getAdjacentBombs(int r, int c) {
+		int count = 0;
+		for (int i = 0; i < bombs.length; i++) {
+			for (int j = 0; j < bombs[0].length; j++) {
+				if (bombs[i][j] == bombs[r - 1][c - 1] || bombs[i][j] == bombs[r][c - 1]
+						|| bombs[i][j] == bombs[r + 1][c - 1] || bombs[i][j] == bombs[r + 1][c]
+						|| bombs[i][j] == bombs[r + 1][c + 1] || bombs[r][c + 1] || bombs[i][j] == bombs[r - 1][c + 1]
+						|| bombs[i][j] == bombs[r - 1][c]) {
+					
+					count++;
+				}
+			}
+		}
+		return count;
+	}
 
 }
