@@ -16,23 +16,23 @@ public class DisplayGame extends PApplet {
 	}
 
 	public void draw() {
-		
-		drawGrid(bombs, 300, 300);
+
+		drawGrid(board, 20, 20);
 	}
-	
+
 	public void drawGrid(int[][] grid, int w, int h) {
-		float box_width = w/grid[0].length;
-		float box_height = h/grid.length;
-		
+		float box_width = w / grid[0].length;
+		float box_height = h / grid.length;
+
 		for (int r = 0; r < board.length; r++) {
 			for (int c = 0; c < board[0].length; c++) {
 				float x = box_height * h;
 				float y = box_width * w;
-				
+
 				rect(x, y, box_width, box_height);
 				int value = grid[r][c];
 				if (value > 0) {
-					text(value, x + box_width/2, y + box_height/2);
+					text(value, x + box_width / 2, y + box_height / 2);
 				}
 			}
 		}
@@ -58,27 +58,26 @@ public class DisplayGame extends PApplet {
 		OpenTiles(r, c - 1);
 
 	}
-
-	public void ExplodeBombs(int r, int c) {
-		for (int i = 0; i < bombs.length; i++) {
-			for (int j = 0; j < bombs[0].length; j++) {
-				OpenTiles(r, c);
-				if(!HasBomb) {
-					
-				}
-
-			}
-		}
-	}
+	
+	
 
 	public void text(int value, float x, float y) {
-		for(int r = 0; r < board.length; r++) {
-			for(int c = 0; c < board[0].length; c++) {
-				if (board[r][c] > 0) {
+		for (int r = 0; r < board.length; r++) {
+			for (int c = 0; c < board[0].length; c++) {
+				if (board[r][c] == 1) {
 					System.out.print("1");
+				} else if (board[r][c] == 2) {
+					System.out.print("2");
+				} else if (board[r][c] == 3) {
+					System.out.print("3");
+				} else if (board[r][c] == 4) {
+					System.out.print("4");
 				}
-				
+
 			}
 		}
+
 	}
+	
+	
 }
