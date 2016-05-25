@@ -2,22 +2,53 @@
 public class Gameboard {
 
 	private int[][] board;
-	final static int BOMB = 4;
-	private int row = 10;
-	private int column = 10;
+	final static int BOMB = -1;
+	final static int FLAG = -2;
+	private int row;
+	private int column;
 	private boolean[][] med; // checks to see whether numbers will show or not
-								// on grid
-	private boolean[][] flags;
-	private boolean[][] bombs;
+	// on grid
+	// private boolean[][] flags;
+	// private boolean[][] bombs;
+	private boolean[][] show;
 
-	private int startTime;
-	private int endTime;
-
-	public Gameboard(int r, int c) {
-		row = r;
-		column = c;
+	public Gameboard(int NumOfRows, int NumberOfColumns, boolean[][] s) {
+		row = NumOfRows;
+		column = NumberOfColumns;
 		board = new int[row][column];
+		show = new boolean[row][column];
+		setBomb();
+		for (int i = 0; i < row; i++) {
+			for (int j = 0; j < column; j++) {
+				if (board[i][j] != BOMB)
+					board[i][j] = getAdjBombs(i, j);
+			}
+		}
+	}
 
+	public void isShowing(int r, int c) {
+		if (InBoard(r, c)) {
+			if (board[r][c] >= 1 && board[r][c] <= 8) {
+				show[r][c] = true;
+			}
+			if (board[r][c] == 0) {
+				isShowing(r + 1, c);
+				isShowing(r - 1, c);
+				isShowing(r - 1, c - 1);
+				isShowing(r + 1, c - 1);
+				isShowing(r + 1, c + 1);
+				isShowing(r - 1, c + 1);
+				isShowing(r, c + 1);
+				isShowing(r, c - 1);
+			}
+			if (board[r][c] == BOMB) {
+				for (int i = 0; i < row; i++) {
+					for (int j = 0; j < column; j++) {
+						show[i][j] = true;
+					}
+				}
+			}
+		}
 	}
 
 	public int getRandomRow() {
@@ -40,14 +71,11 @@ public class Gameboard {
 		}
 
 	}
-
-	public boolean IsBomb(int r, int c) {
-		return bombs[r][c];
-	}
-
-	public boolean isFlag(int r, int c) {
-		return flags[r][c];
-	}
+	/*
+	 * public boolean IsBomb(int r, int c) { return bombs[r][c]; }
+	 * 
+	 * public boolean isFlag(int r, int c) { return flags[r][c]; }
+	 */
 
 	public int getRow() {
 		return row;
@@ -57,25 +85,28 @@ public class Gameboard {
 		return column;
 	}
 
-	public void ShowEmptySquares(int r, int c) { // shows all empty squares
-													// without numbers when
-													// clicking a box
-		if (r < 0 || r > row || c < 0 || c > column) {
-			return;
+	public int getAdjBombs(int r, int c) {
+		int mines = 0;
+		for (int i = r - 1; i <= r + 1; i++) {
+			for (int j = c - 1; j <= c + 1; j++) {
+				if (InBoard(i, j) && board[i][j] == BOMB) {
+					mines++;
+				}
+			}
 		}
-
-		ShowEmptySquares(r - 1, c - 1);
-		ShowEmptySquares(r - 1, c);
-		ShowEmptySquares(r - 1, c + 1);
-		ShowEmptySquares(r - 1, c);
-
-		// ShowEmptySquares
-
+		return mines;
 	}
 
-	public void setFlags() { // shows flags when user right-clicks on square
-
+	public void CalcMines() {
+		for (int i = 0; i < board.length; i++) {
+			for (int j = 0; j < board[0].length; j++) {
+				if (board[i][j] != BOMB) {
+					board[i][j] = getAdjBombs(i, j);
+				}
+			}
+		}
 	}
+
 
 	public void resetGame() {
 		for (int r = 0; r < row; r++) {
@@ -87,20 +118,8 @@ public class Gameboard {
 
 	}
 
-	public int getAdjacentBombs(int r, int c) {
-		int count = 0;
-		for (int i = 0; i < bombs.length; i++) {
-			for (int j = 0; j < bombs[0].length; j++) {
-				if (bombs[i][j] == bombs[r - 1][c - 1] || bombs[i][j] == bombs[r][c - 1]
-						|| bombs[i][j] == bombs[r + 1][c - 1] || bombs[i][j] == bombs[r + 1][c]
-						|| bombs[i][j] == bombs[r + 1][c + 1] || bombs[r][c + 1] || bombs[i][j] == bombs[r - 1][c + 1]
-						|| bombs[i][j] == bombs[r - 1][c]) {
-					
-					count++;
-				}
-			}
-		}
-		return count;
+	public boolean InBoard(int r, int c) {
+		return ((r >= 0 && r < row) && (c >= 0 && c < column));
 	}
 
 }
