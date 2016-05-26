@@ -1,196 +1,166 @@
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import processing.core.PApplet;
+import processing.core.PFont;
 import processing.core.PImage;
 
 public class DisplayGame extends PApplet {
-	
 
- private int[][] board = new int[20][20];
- private int[][] bombs = new int[20][20];
- boolean HasBomb;
- int xlength = 20;
- int ylength = 20;
- long t0, t1;
- double dt;
- private Map<Object, Integer> colors;
-private Map<Object, PImage> images;
+	private static final Integer UNKNOWN_COLOR = null;
+	private int[][] board = new int[20][20];
+	private int[][] bombs = new int[20][20];
+	private boolean GameState;
+	boolean HasBomb;
+	int xlength = 20;
+	int ylength = 20;
+	long t0, t1;
+	double dt;
+	Position clicked;
+	int pieceType;
+	PFont f;
 
- 
- private boolean[][] show = new boolean[20][20];
- Gameboard gameBoard = new Gameboard(20,20, show);
+	private static HashMap<Integer, PImage> images;
+	PImage img0, img1, img2, img3, img4, img5, img6, img7, img8, imgb;
 
- public void setUp() {
-  size(100, 100);
-  
-  t0 = new Date().getTime();
+	Gameboard gameBoard = new Gameboard(20, 20);
 
-  DisplayGame.setImage(1, );
-  DisplayGame.setImage(2, );
-  DisplayGame.setImage(3, );
-  DisplayGame.setImage(4, );
-  DisplayGame.setImage(5, );
-  DisplayGame.setImage(6, );
-  DisplayGame.setImage(7, );
-  DisplayGame.setImage(8, );
-  DisplayGame.setImage(-1, "D:/JinKaleFinal\Bomb.png");
-  DisplayGame.setImage(-2, "D:/3079-256x256x32.png");
- }
- 
- public void setColor(Object pieceType, Integer color) {
-		colors.put(pieceType, color);
- }
- 
- private Integer getColor(Object pieceType) {
-		Integer col = colors.get(pieceType);
-		if (col == null) { // no color defined for this class
-			return UNKNOWN_COLOR;
-		} else {
-			return col;
+	public void setup() {
+		size(400, 400);
+		images = new HashMap<Integer, PImage>();
+		f = createFont("Arial", 16, true);
+
+		t0 = new Date().getTime();
+
+		img0 = loadImage("../assets/minesweeper_tiles0.jpg");
+		img1 = loadImage("../assets/minesweeper_tiles1.jpg");
+		img2 = loadImage("../assets/minesweeper_tiles2.jpg");
+		img3 = loadImage("../assets/minesweeper_tiles3.jpg");
+		img4 = loadImage("../assets/minesweeper_tiles4.jpg");
+		img5 = loadImage("../assets/minesweeper_tiles5.jpg");
+		img6 = loadImage("../assets/minesweeper_tiles6.jpg");
+		img7 = loadImage("../assets/minesweeper_tiles7.jpg");
+		img8 = loadImage("../assets/minesweeper_tiles8.jpg");
+		imgb = loadImage("../assets/minesweeper_tilesbomb.jpg");
+
+	}
+
+	// public PImage getImage(int pieceType) {
+	// PImage img = images.get(pieceType);
+	// return img;
+	// }
+	//
+	// public void setImage(String filename) {
+	// PImage img = this.loadImage(filename);
+	// setImage(pieceType, img);
+	// }
+	//
+	// public static void setImage(int pieceType, PImage img) {
+	// images.put(pieceType, img);
+	// }
+
+	public double startTimer() {
+		t1 = new Date().getTime();
+
+		dt = t1 - t0;
+
+		return dt / 1000;
+
+	}
+
+	public double stopTimer() {
+		return t1;
+	}
+
+	public void mouseReleased() {
+		background(255);
+		this.clicked = findBoardPosition(this.mouseX, this.mouseY);
+	}
+
+	public void draw() {
+		drawGrid(board, xlength, ylength);
+		if (clicked != null) {
+			OpenTiles(clicked.getX(), clicked.getY());
+		}
+
+		textFont(f, 16);
+		fill(0);
+
+		textAlign(DOWN);
+
+		text("TIMER: " + startTimer(), 100, 100);
+
+		// setImage(0, img0);
+		// setImage(1, img1);
+		// setImage(2, img2);
+		// setImage(3, img3);
+		// setImage(4, img4);
+		// setImage(5, img5);
+		// setImage(6, img6);
+		// setImage(7, img7);
+		// setImage(8, img8);
+		// setImage(-1, imgb);
+
+		// image(img0,0,0);
+
+		// gameBoard.getAdjBombs(20, 20);
+
+		// message("TIMER: " + startTimer());
+
+	}
+
+	public void drawGrid(int[][] grid, int l, int h) {
+		fill(110, 255, 110);
+		for (int il = 0; il < grid.length; il++) {
+			for (int ih = 0; ih < grid[0].length; ih++) {
+				rect(il * grid.length, ih * grid[0].length, l, h);
+			}
+		}
+
+	}
+
+	public void OpenTiles(int r, int c) {
+
+		fill(255, 0, 0);
+		gameBoard.isShowing(r, c);
+		for (int i = 0; i < gameBoard.show.length; i++) {
+			for (int j = 0; j < gameBoard.show[0].length; j++) {
+				if (gameBoard.show[i][j] == 1) {
+					rect(i * 20, j * 20, xlength, ylength);
+				}
+
+			}
 		}
 	}
 
-	public PImage getImage(Object pieceType) {
-		PImage img = images.get(pieceType);
-		return img;
+	public void message(String message) {
+		fill(100);
+		rect(0, 0, 10, 10);
+
+		fill(255);
+		text(message, 10 / 2, 10 / 2);
+
 	}
- 
- public void setImage(Object pieceType, String filename) {
-		PImage img = p.loadImage(filename);
-		setImage(pieceType, img);
+
+	public Position findBoardPosition(int mX, int mY) { // finds position where
+														// mouse clicked
+		int box_x = mX / xlength;
+		int box_y = mY / ylength;
+		return new Position(box_x, box_y);
+
 	}
- 
- public void setImage(Object pieceType, PImage img) {
-		images.put(pieceType, img);
+
+	public void WinOrLose() { // method doesn't work for some reason
+		if (GameState == gameBoard.won()) {
+			message("YAY You Won!!");
+		}
+
+		if (GameState == gameBoard.lose()) {
+			message("Game Over! You lost!");
+		}
 	}
- 
- public double startTimer() {
-t1 = new Date().getTime();
-
-dt = t1 - t0;
-
-return dt / 1000; // divide by 1000 to get seconds instead of milliseconds 
 
 }
-
- public void mouseReleased() {
-  background(255);
-  Position clicked = findBoardPosition(this.mouseX, this.mouseY);
-  //findBomb
-  OpenTiles(clicked.getX(), clicked.getY());
-  
- }
-
- public void draw() {
-  drawGrid(board, xlength, ylength);
-//  gameBoard.getAdjBombs(20, 20);
-  
-  textFont("TIMER: " +startTimer());
- }
- 
-
- public void drawGrid(int[][] grid, int l, int h) {
-  fill(110, 255, 110);
-  for (int il = 0; il < grid.length; il++) {
-   for (int ih = 0; ih < grid[0].length; ih++) {
-    rect(il * grid.length, ih * grid[0].length, l, h);
-   }
-  }
- }
- 
- public void drawRect(int x, int y, int l, int h, int red, int gr, int bl){
-  fill(red, gr, bl);
-  stroke(20);
-    
-  rect(x, y, l, h);
- }
- 
- public void OpenTiles(int r, int c) {
-
-	 /*
-  if (r < 0 || c < 0 || r >= bombs.length || c >= bombs[0].length)
-   return;
-
-  if (bombs[r][c] != 0){
-   drawRect(r, c, xlength, ylength, 255, 0, 0);
-   return;
-  }
-  
-  if (board[r][c] == 0){
-   drawRect(r, c, 21, 21, 0, 0, 255);
-   return;
-  }
-  */
-gameBoard.isShowing(r, c);
-for (int i = 0; i < show.length; i++) {
-	for (int j = 0; j < show[0].length; j++) {
-		if (show[i][j] == true) {
-			drawRect(i,j,xlength, ylength, 255,0,0);
-		
-	
-}
-  
-//  drawRect(r+1, c, xlength, ylength, 255, 0, 0);
-//  drawRect(r-1, c, xlength, ylength, 255, 0, 0);
-//  drawRect(r-1, c-1, xlength, ylength, 255, 0, 0);
-//  drawRect(r+1, c-1, xlength, ylength, 255, 0, 0);
-//  drawRect(r+1, c+1, xlength, ylength, 255, 0, 0);
-//  drawRect(r, c+1, xlength, ylength, 255, 0, 0);
-//  drawRect(r, c-1, xlength, ylength, 255, 0, 0);
-	}
-}
-}
-/*
-  OpenTiles(r + 1, c);
-  OpenTiles(r - 1, c);
-  OpenTiles(r - 1, c - 1);
-  OpenTiles(r + 1, c - 1);
-  OpenTiles(r + 1, c + 1);
-  OpenTiles(r - 1, c + 1);
-  OpenTiles(r, c + 1);
-  OpenTiles(r, c - 1);
-*/
- 
- 
-
- 
-
- public Position findBoardPosition(int mX, int mY) { //finds position where mouse clicked
-  int box_x = mX / xlength;
-  int box_y = mY / ylength;
-  return new Position(box_x, box_y);
-
- }
-
- //public void findBomb(int x, int y) { // stores all locations around mouse clicked in array, and then compares all positions to the array of bombs
- // ArrayList<Integer> AdjLocs = new ArrayList<Integer>(); // instead of while loop, I have to use for loop
-//how to open a different color of squares with numbers on edges without opening the whole entire grid??
-  
-/*  while (findBoardPosition(mouseX, mouseY) != bombs[x][y]) {
-   AdjLocs.add(x + 1, y);
-   AdjLocs.add(x - 1, y);
-   AdjLocs.add(x - 1, y - 1);
-   AdjLocs.add(x + 1, y - 1);
-   AdjLocs.add(x + 1, y + 1);
-   AdjLocs.add(x - 1, y + 1);
-   AdjLocs.add(x, y + 1);
-   AdjLocs.add(x, y - 1);
-
-  }
-*/
-//  if (findBoardPosition(mouseX, mouseY) == bombs[x][y]) {
-//   HasBomb = true;
-  
-//  }
-
-}
-
-
- 
- 
-
-
-
